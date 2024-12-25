@@ -82,7 +82,7 @@ export function EmailList() {
         const accounts = await web3?.eth.requestAccounts();
         if (accounts && accounts.length > 0) {
           const inbox: Email[] = await contract.methods.getInbox().call({ from: accounts[0] });
-  
+
           const enrichedInbox = await Promise.all(
             inbox.map(async (email) => {
               try {
@@ -102,7 +102,7 @@ export function EmailList() {
               }
             })
           );
-  
+
           setEmails(enrichedInbox);
         } else {
           toast.error('No accounts found');
@@ -117,7 +117,7 @@ export function EmailList() {
       setLoading(false);
     }
   };
-  
+
 
   const handleSort = () => {
     const order = sortOrder === 'asc' ? 'desc' : 'asc';
@@ -127,7 +127,7 @@ export function EmailList() {
     });
     setEmails(sortedEmails);
   };
-  
+
 
 
   const handleChangePage = (_: unknown, newPage: number) => {
@@ -150,24 +150,28 @@ export function EmailList() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   return (
     <>
-      <TableContainer>
+      <TableContainer sx={{ boxShadow: 3, borderRadius: 2, overflow: 'hidden' }}>
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Sender</TableCell>
-              <TableCell>Subject</TableCell>
-              <TableCell>
+            <TableRow sx={{ backgroundColor: 'primary.main' }}>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Sender</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Subject</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
                 <TableSortLabel
                   active={true}
                   direction={sortOrder}
                   onClick={handleSort}
+                  sx={{
+                    color: 'white',
+                    '&:hover': { color: 'secondary.main' },
+                  }}
                 >
                   Date
                 </TableSortLabel>
@@ -183,7 +187,11 @@ export function EmailList() {
                   key={index}
                   hover
                   onClick={() => handleRowClick(email)}
-                  style={{ cursor: 'pointer' }}
+                  sx={{
+                    cursor: 'pointer',
+                    backgroundColor: index % 2 === 0 ? 'grey.100' : 'white',
+                    '&:hover': { backgroundColor: 'grey.200' },
+                  }}
                 >
                   <TableCell>{email.senderEmail || email.sender}</TableCell>
                   <TableCell>{email.subject}</TableCell>
@@ -191,7 +199,6 @@ export function EmailList() {
                 </TableRow>
               ))}
           </TableBody>
-
         </Table>
       </TableContainer>
       <TablePagination
@@ -202,7 +209,9 @@ export function EmailList() {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{ mt: 2, '& .MuiTablePagination-toolbar': { justifyContent: 'center' } }}
       />
+
 
       {selectedEmail && (
         <Modal open={true} onClose={handleCloseModal}>
