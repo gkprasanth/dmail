@@ -215,32 +215,47 @@ export function EmailList() {
 
       {selectedEmail && (
         <Modal open={true} onClose={handleCloseModal}>
-          <Box sx={modalStyle}>
-            <Typography variant="h6" component="h2" gutterBottom>
+          <Box
+            sx={{
+              ...modalStyle,
+              width: '70vw',
+              height: '70vh',
+              maxWidth: '800px',
+              maxHeight: '80vh',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Typography variant="h5" component="h2" gutterBottom>
               {selectedEmail.subject}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant="body2" color="textSecondary" gutterBottom>
               From: {selectedEmail.senderEmail || selectedEmail.sender}
             </Typography>
             <Typography variant="body2" color="textSecondary" gutterBottom>
-              Date: {new Date(Number(selectedEmail.timestamp) * 1000).toLocaleDateString()}
+              Date: {new Date(Number(selectedEmail.timestamp) * 1000).toLocaleString()}
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              {selectedEmail.content}
-            </Typography>
-            {selectedEmail.imageHash && (
-              <a
-                href={`https://ipfs.io/ipfs/${selectedEmail.imageHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={`https://ipfs.io/ipfs/${selectedEmail.imageHash}`}
-                  alt="Attached Image"
-                  style={{ width: '100%', marginTop: '16px', borderRadius: '8px' }}
-                />
-              </a>
-            )}
+            <Box sx={{ overflowY: 'auto', flexGrow: 1, pr: 2 }}>
+              <Typography variant="body1" gutterBottom>
+                {selectedEmail.content}
+              </Typography>
+              {selectedEmail.imageHash && (
+                <Box sx={{ mt: 2, textAlign: 'center' }}>
+                  <a
+                    href={`https://ipfs.io/ipfs/${selectedEmail.imageHash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src={`https://ipfs.io/ipfs/${selectedEmail.imageHash}`}
+                      alt="Attached Image"
+                      style={{ width: '100%', maxHeight: '400px', objectFit: 'contain', borderRadius: '8px' }}
+                    />
+                  </a>
+                </Box>
+              )}
+            </Box>
           </Box>
         </Modal>
       )}
