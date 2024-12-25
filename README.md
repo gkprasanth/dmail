@@ -70,5 +70,5 @@ Ensure you have the following installed:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/yourprojectname.git
-   cd yourprojectname
+   git clone https://github.com/gkprasanth/dmail.git
+   cd dmail
