@@ -5,6 +5,7 @@ contract DecentralizedEmail {
     // Struct to represent an email
     struct Email {
         address sender; // The address of the sender
+        address receiver; // The address of the receiver
         string subject; // The subject of the email
         string content; // The content/body of the email
         uint256 timestamp; // When the email was sent
@@ -13,6 +14,8 @@ contract DecentralizedEmail {
 
     // Mapping of recipient address to their inbox of emails
     mapping(address => Email[]) private inbox;
+    // Mapping of sender address to their sent emails
+    mapping(address => Email[]) private sentEmails;
 
     // Event emitted when an email is sent
     event EmailSent(address indexed sender, address indexed receiver, string subject);
@@ -25,9 +28,10 @@ contract DecentralizedEmail {
      * @param imageHash The hash of the attached image.
      */
     function sendEmail(address receiver, string memory subject, string memory content, string memory imageHash) public {
-        // Create a new email struct
+        // Create a new email struct including the receiver
         Email memory newEmail = Email({
             sender: msg.sender,
+            receiver: receiver, // Store the receiver's address
             subject: subject,
             content: content,
             timestamp: block.timestamp,
@@ -36,6 +40,8 @@ contract DecentralizedEmail {
 
         // Add the email to the recipient's inbox
         inbox[receiver].push(newEmail);
+        // Add the email to the sender's sent emails
+        sentEmails[msg.sender].push(newEmail);
 
         // Emit the event
         emit EmailSent(msg.sender, receiver, subject);
@@ -47,5 +53,13 @@ contract DecentralizedEmail {
      */
     function getInbox() public view returns (Email[] memory) {
         return inbox[msg.sender];
+    }
+
+    /**
+     * @dev Fetches all sent emails of the caller.
+     * @return An array of emails sent by the caller.
+     */
+    function getSentEmails() public view returns (Email[] memory) {
+        return sentEmails[msg.sender];
     }
 }
